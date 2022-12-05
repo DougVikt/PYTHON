@@ -1,7 +1,5 @@
 import pygame as pyg , random 
 
-# jogo Ploop
-
 # iniciando o pygame
 pyg.init()
 
@@ -13,12 +11,13 @@ largura = 650
 tela = pyg.display.set_mode((largura , altura))
 pyg.display.set_caption('ploop')
 
-# icone da tela
-img = pyg.image.load('bola.png')
-pyg.display.set_icon(img)
-
-# tela de fundo
-fundo = pyg.image.load('fundo.jpg').convert_alpha()
+# caso não carregue o icone , fica o padrão
+try:
+   img = pyg.image.load('bola.png')
+   pyg.display.set_icon(img)
+except :
+   img = None
+   
 
 # para desenhar na tela
 desenho = pyg.draw
@@ -45,6 +44,19 @@ aleatorio = [
       ]
 
 cor = branco
+
+
+# tela de fundo 
+def tela_fundo():
+   # caso não carregue a imagem
+   try : 
+      load = pyg.image.load('fundo.jpg').convert_alpha()
+      fundo = tela.blit(load, [0 , 0])
+   except:
+      fundo = tela.fill(preto)
+      
+   return fundo
+
 
 def linhas( inicio = [0 , 0], fim = [0 , 0] ,cor = branco , espes = 20):
    # para encurtar na criação das linhas 
@@ -90,7 +102,7 @@ def tela_inicio(): # ainda vou colocar um efeito no butão
       if evento.type == pyg.QUIT :
          loop = False
       
-      tela.blit(fundo, [0 , 0])
+      tela_fundo()
       
       if evento.type == pyg.KEYDOWN :
          if evento.key == pyg.K_RETURN or evento.key == pyg.K_KP_ENTER:
@@ -143,7 +155,7 @@ def tela_inicio(): # ainda vou colocar um efeito no butão
       pyg.display.flip()
       
 
-def main():
+def main(): # colocar fisica na bola
    
    global cor,loop , tempo , cronom
    
@@ -185,7 +197,7 @@ def main():
       fonte = fontes(100)
       contador = fonte.render(cronom,True ,cinza)
 
-      tela.blit(fundo, [0 , 0])
+      tela_fundo()
       tela.blit(contador , [280 , 320])
 
       # laterais
@@ -266,7 +278,7 @@ def gameover():
      
       return tela.blit(recorde , [187 , 450]) , tela.blit(tempo_r , [400 ,450])
 
-   tela.blit(fundo ,[0 , 0]) 
+   tela_fundo()
    
    while loop :
       # ao clicar no 'X' , sair  
